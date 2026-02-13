@@ -68,7 +68,6 @@ int op_C(int &opcao){
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
             } else {
-
                 return opcao;
                 break;
             }
@@ -92,6 +91,7 @@ int main() {
     // =========================================================
 
     //Primeira entrada de dados
+    cout << sizeof(teste);
     cout << "Bem vindo a lanchonete do wagnao" << endl;
     cout << "Por favor nos diga seu nome: ";
     cin >> nome;

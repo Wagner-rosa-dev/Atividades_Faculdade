@@ -18,5 +18,9 @@ int main(){
         cout << "Nota Juiz " << i+1 << ": " << notaJuiz[i] << endl;
     }
 
+    int num1 = 0;
+
+    num1 == 0 ? cout << " " : cout << " ";
+
     return 0;
 }

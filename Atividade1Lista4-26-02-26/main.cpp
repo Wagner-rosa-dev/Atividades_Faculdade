@@ -19,7 +19,6 @@ int primo(int num){
     }
 }
 
-
 int main() {
     srand(time(0));
 
@@ -33,10 +32,8 @@ int main() {
     for(int i = 0; i < tamanho; i++){
         vec_num.push_back((rand()%100) + 1);
 
-        if(primo(vec_num[i])){
-            vec_primo.push_back(vec_num[i]);
-
-        }
+        if(primo(vec_num[i]))
+            vec_primo.push_back(vec_num[i]);  
     }
 
     cout << "Numeros gerados abaixo: " << endl;
@@ -47,6 +44,8 @@ int main() {
 
     cout << "Tamanho do vetor numero: " << vec_num.size() << endl;
     cout << "Tamanho do vetor primo: " << vec_primo.size() << endl;
+
+    cout << vec_num.at(2) << endl;
 
     return 0;
 }

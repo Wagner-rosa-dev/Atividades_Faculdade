@@ -7,8 +7,6 @@ using namespace std;
 const int n = 8;
 
 
-
-
 int main()
 {
     //Separação de positivo e negativo com vetores

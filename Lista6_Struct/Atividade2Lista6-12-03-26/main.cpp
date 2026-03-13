@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <time.h>
 
 using namespace std;
 
@@ -71,40 +72,100 @@ void exibir_Tipos(vector<INFO> lista){
 
 }
 
-void Cadastro_Servico(vector<INFO> lista, vector<CADASTRO> cadastro, int mt_mes[][colunas]){
+int diaVago(int mes[][colunas], int dia, int &indiceoff){
+    for(int i = 0; i < 3; i++){
+        if(mes[dia][i] == 0){
+            indiceoff = i;
+            return 1;
+
+        }
+    }
+
+    return 0;
+}
+
+bool codigoExiste(const int codigo, const vector<INFO> tipos_servicos){
+    for(int i = 0; i < tipos_servicos.size(); i++){
+        if(codigo == tipos_servicos[i].codigo){
+        return true;
+        }
+    }
+
+    return false;
+}
+
+
+void Cadastro_Servico(vector<CADASTRO> &cadastro, int mt_mes[][colunas], const vector<INFO> tipos_codigos){
+
     int dia;
     int preco;
     int codigo;
+    int indice;
 
     cout << "Qual o dia do cadastro do serviço ? " << endl;
     cout << "Digite aqui: ";
     cin >> dia;
-    for(int i = dia; i < dia + 1; i++){
-        for(int j = 0; j < 3; j++){
-            if(mt_mes[i][j].)
-        }
+
+    int diaAtual = (dia - 1);
+
+    if(diaVago(mt_mes, diaAtual, indice) == 0){
+        cout << "Não tem mais vaga para registro de serviço nesse dia!" << endl;
+        cout << "Tente novamente mais tarde!" << endl;
+    }   else{
+            cout << "Qual o codigo do tipo do serviço ?" << endl;
+            cout << "digite aqui: ";
+            cin >> codigo;
+            if(!(codigoExiste(codigo, tipos_codigos))){
+                cout << "Esse Código de Serviço não existe" << endl;
+                cout << "Tente novamente mais tarde!" << endl;
+                } else{
+                    cout << "Qual foi o valor do serviço ? " << endl;
+                    cout << "Digite aqui: ";
+                    cin >> preco;
+
+            }
+
+
+
+
+            cout << "Qual foi o valor do serviço ? " << endl;
+            cout << "Digite aqui: ";
+            cin >> preco;
+
+
+
+
+
+
+
+
+
+
+
+            CADASTRO novo;
+
+            novo.valor = preco;
+            novo.codigo_cliente = (rand() % 100);
+            novo.TIPO.codigo = codigo;
+
+            cadastro.push_back(novo);
+
+            mt_mes[diaAtual][indice] = cadastro.size();
     }
-
-    cout << "Qual foi o valor do serviço ? " << endl;
-    cout << "Digite aqui: ";
-    cin >> preco;
-
-    cout << "Qual o codigo do tipo do serviço ?" << endl;
-    cout << "digite aqui: ";
-    cin >> codigo;
 
 }
 
 
-
-
-
-
 int main(){
+    srand(time(0));
     int quant_servico;
     int count = 0;
 
     int mes[linhas][colunas];
+
+    mes[1][0] = 1;
+    mes[1][1] = 1;
+    mes[1][2] = 1;
 
     vector<INFO> tipos_servicos;
     vector<CADASTRO> cadastro_servicos;
@@ -160,7 +221,7 @@ int main(){
 
             exibir_Tipos(tipos_servicos);
 
-            Cadastro_Servico(tipos_servicos, cadastro_servicos, mes);
+            Cadastro_Servico(cadastro_servicos, mes, tipos_servicos);
 
 
 
@@ -182,32 +243,7 @@ int main(){
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     } while(opcao == 0);
-
-
-
-
-
-
-
 
     return 0;
 }

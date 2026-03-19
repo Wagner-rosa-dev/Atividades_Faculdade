@@ -20,6 +20,7 @@ void limpabuffer(){
 }
 //__________________________________
 
+
 struct INFO_SERVICO{
     string descricao;
     int codigo;
@@ -31,9 +32,24 @@ struct INFO_CADASTRO{
     INFO TIPO;
     int valor;
     int codigo_cliente;
-    int ordem;
+
 };
 typedef struct INFO_CADASTRO CADASTRO;
+
+struct DIA{
+    vector<CADASTRO> servicos;
+};
+typedef struct DIA DIA;
+
+struct MES{
+    vector<DIA> dias;
+
+    MES(){
+        dias.resize(30);
+    }
+
+};
+typedef struct MES MES;
 
 void Tipo_Servico(INFO &servico, int ordem){
         limpatela();
@@ -72,17 +88,6 @@ void exibir_Tipos(vector<INFO> lista){
 
 }
 
-int diaVago(int mes[][colunas], int dia, int &indiceoff){
-    for(int i = 0; i < 3; i++){
-        if(mes[dia][i] == 0){
-            indiceoff = i;
-            return 1;
-
-        }
-    }
-
-    return 0;
-}
 
 bool codigoExiste(const int codigo, const vector<INFO> tipos_servicos){
     for(int i = 0; i < tipos_servicos.size(); i++){
@@ -94,28 +99,37 @@ bool codigoExiste(const int codigo, const vector<INFO> tipos_servicos){
     return false;
 }
 
+void Cadastro_Servico(MES &mes_atual, vector<INFO> tipos){
+    srand(time(0));
 
-void Cadastro_Servico(vector<CADASTRO> &cadastro, int mt_mes[][colunas], const vector<INFO> tipos_codigos){
+    int dia, preco, codigo, valido = 0;
+    string descricao;
 
-    int dia;
-    int preco;
-    int codigo;
-    int indice;
-
+    while(valido == 0){
     cout << "Qual o dia do cadastro do serviço ? " << endl;
     cout << "Digite aqui: ";
     cin >> dia;
 
+    if(dia < 1 || dia > 30){
+        limpatela();
+        cout << "Dia Invalido!" << endl;
+        cout << "Escolha uma dia entre 1 a 30, por favor!" << endl;
+        valido = 0;
+    } else{
+        valido = 1;
+        }
+    }
+
     int diaAtual = (dia - 1);
 
-    if(diaVago(mt_mes, diaAtual, indice) == 0){
+    if(mes_atual.dias[diaAtual].servicos.size() >= 3){
         cout << "Não tem mais vaga para registro de serviço nesse dia!" << endl;
         cout << "Tente novamente mais tarde!" << endl;
     }   else{
             cout << "Qual o codigo do tipo do serviço ?" << endl;
             cout << "digite aqui: ";
             cin >> codigo;
-            if(!(codigoExiste(codigo, tipos_codigos))){
+            if(!(codigoExiste(codigo, tipos))){
                 cout << "Esse Código de Serviço não existe" << endl;
                 cout << "Tente novamente mais tarde!" << endl;
                 } else{
@@ -123,53 +137,33 @@ void Cadastro_Servico(vector<CADASTRO> &cadastro, int mt_mes[][colunas], const v
                     cout << "Digite aqui: ";
                     cin >> preco;
 
-            }
+                    cout << "Qual a descrição do serviço ?" << endl;
+                    cin >> descricao;
+
+                    CADASTRO novo;
+                    novo.valor = preco;
+                    novo.codigo_cliente = (rand() % 100);
+                    novo.TIPO.codigo = codigo;
+                    novo.TIPO.descricao = descricao;
 
 
-
-
-            cout << "Qual foi o valor do serviço ? " << endl;
-            cout << "Digite aqui: ";
-            cin >> preco;
-
-
-
-
-
-
-
-
-
-
-
-            CADASTRO novo;
-
-            novo.valor = preco;
-            novo.codigo_cliente = (rand() % 100);
-            novo.TIPO.codigo = codigo;
-
-            cadastro.push_back(novo);
-
-            mt_mes[diaAtual][indice] = cadastro.size();
-    }
-
+                    mes_atual.dias[diaAtual].servicos.push_back(novo);
+                }
+        }
 }
 
 
 int main(){
-    srand(time(0));
-    int quant_servico;
+
+    int quant_tipos;
     int count = 0;
 
-    int mes[linhas][colunas];
-
-    mes[1][0] = 1;
-    mes[1][1] = 1;
-    mes[1][2] = 1;
 
     vector<INFO> tipos_servicos;
     vector<CADASTRO> cadastro_servicos;
+    MES meu_mes;
 
+    //config de teste
     tipos_servicos.resize(2);
     tipos_servicos[0] = {"Limpeza", 101};
     tipos_servicos[1] = {"Faxina", 102};
@@ -179,14 +173,17 @@ int main(){
     int opcao = 0;
 
     do{
+        limpatela();
         //Feito
         cout << "1. Cadastrar os tipos de serviços" << endl;
 
-        //Andamento
+        //Andamento(faze de teste)
         cout << "2. Cadastrar os serviços prestados" << endl;
 
-
+        //Andamento
         cout << "3. Mostrar os serviços prestados em determinado dia" << endl;
+
+
         cout << "4. Mostrar os serviços prestados em um intervalo de datas" << endl;
         cout << "5. Mostrar um relatório geral, separado por dia, que exiba, inclusive, a descrição do tipo de serviço" << endl;
         cout << "6. Finalizar" << endl;
@@ -194,18 +191,18 @@ int main(){
 
 
         switch(opcao){
-        //cadastro de serviços, a quantidade de serviço é definida pelo usuário
+        //cadastro de tipos de serviços, a quantidade de serviço é definida pelo usuário
         case 1:
             cout << "Bem vindo(a) ao menu de cadastro do tipo de serviço!" << endl;
             cout << "[Essa aba registrara apenas o código e a descrição]" << endl;
             cout << "Quantos serviços serão cadastrados ? " << endl;
             cout << "Digite aqui: ";
-            cin >> quant_servico;
+            cin >> quant_tipos;
             limpabuffer();
 
-            tipos_servicos.resize(quant_servico);
+            tipos_servicos.resize(quant_tipos);
 
-            for(int i = 0; i < quant_servico; i++){
+            for(int i = 0; i < quant_tipos; i++){
             Tipo_Servico(tipos_servicos[i], (i + 1));
             }
 
@@ -221,17 +218,54 @@ int main(){
 
             exibir_Tipos(tipos_servicos);
 
-            Cadastro_Servico(cadastro_servicos, mes, tipos_servicos);
+            Cadastro_Servico(meu_mes, tipos_servicos);
 
+            cout << "Registro do serviço feito com sucesso!" << endl;
 
-
+            cout << "Voltar para o menu principal ?" << endl;
+            cout << "Digite 0 um para voltar: ";
+            cin >> opcao;
 
 
             break;
 
-        case 3:
-            break;
+        case 3: {
+            limpatela();
 
+            int dia, diaAtual;
+
+            cout << "Bem vinda a area de pedidos feitos!" << endl;
+            cout << "Qual o dia em que você gostaria de analisar ?" << endl;
+            cout << "Digite aqui: ";
+            cin >> dia;
+
+            diaAtual = dia - 1;
+
+
+            int quant_servicos = meu_mes.dias[diaAtual].servicos.size();
+
+            if(meu_mes.dias[diaAtual].servicos.empty()){
+                cout << "Infelizmente não tem nenhum serviço registrado nesse dia!" << endl;
+                cout << "Voltar ao menu ?" << endl;
+                cout << "Digite 0 para voltar: ";
+                cin >> opcao;
+            } else{
+                cout << "Serviço do dia " << dia << " !" << endl;
+
+                for(int i = 0; i < quant_servicos; i++){
+                    cout << "Descrição do serviço: ";
+                    cout << meu_mes.dias[diaAtual].servicos[i].TIPO.descricao << endl;
+                    cout << "Código do serviço: ";
+                    cout << meu_mes.dias[diaAtual].servicos[i].TIPO.codigo << endl;
+                    cout << "Preço do serviço: ";
+                    cout << meu_mes.dias[diaAtual].servicos[i].valor << endl;
+                    cout << "Código do cliente: ";
+                    cout << meu_mes.dias[diaAtual].servicos[i].codigo_cliente << endl;
+                }
+            }
+
+            break;
+        }
         case 4:
             break;
 

@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Atividade2Lista6-12-03-26 LANGUAGES CXX)
+project(Trabalho_Tecnicas LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(Atividade2Lista6-12-03-26 main.cpp
-    registro.h registro.cpp)
+add_executable(Trabalho_Tecnicas main.cpp)
 
 include(GNUInstallDirs)
-install(TARGETS Atividade2Lista6-12-03-26
+install(TARGETS Trabalho_Tecnicas
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

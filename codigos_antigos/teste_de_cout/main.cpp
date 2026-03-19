@@ -5,11 +5,10 @@ using namespace std;
 
 int main()
 {
-    cout << " " <<setfill('-') << setw(22) << "" << setfill(' ') << endl;
+    int a = 1;
 
-    cout << left
-         << " | " << setw(7) << "Código"
-         << " | " << setw(10) << "Descrição" << " | " << endl;
+
+    a == 1 ? cout << "ta bom" << endl, cout << "afsdadf" << endl : cout << "Errado" << endl;
 
 
 

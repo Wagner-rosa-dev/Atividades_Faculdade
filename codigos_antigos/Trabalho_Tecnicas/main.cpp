@@ -12,48 +12,64 @@ constexpr int MAX = 40;
 constexpr double PI = std::numbers::pi;
 
 //range dos erros do setprecision
-constexpr int erro = 6;
+constexpr int range = 6;
+
+constexpr inline void limpatela(){
+    std::cout << "\033[2J\033[1;1H";
+}
+
+void LeValor(float &num){
+    while(true){
+        cout << "Digite aqui: ";
+        if(!(cin >> num)){
+            cout << "Valor não corresponde a um angulo valido!" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else{
+            break;
+        }
+    }
+}
 
 double ValorMin(double valor){
-    if(valor < 1e-10){
-        return 0.0;
-    }
-    return valor;
+    return (abs(valor) < 1e-10) ? 0.0 : valor;
 }
 
 //Cos e Sen de radiano recebido
 void cos_sin(double rad, double &seno, double &cosseno){
+
     cout << endl;
-    seno = sin(rad);
-    cosseno = cos(rad);
+    seno = ValorMin(sin(rad));
+    cosseno = ValorMin(cos(rad));
 
-    seno = ValorMin(seno);
-    cosseno = ValorMin(cosseno);
 
-    cout << "Numero em Radianos resolvido com sin() e cos()" << endl;
+    cout << "--------------------------------------------------" << endl;
+    cout << "sin() e cos() com cmath" << endl;
     cout << "Seno: " <<  seno << endl;
     cout << "Cosseno: " << cosseno << endl;
+    cout << "--------------------------------------------------" << endl;
 }
 
 void Serie_Taylor(const double rad, const short indice, double &seno, double &cosseno){
 
     //Seno
-    double termo_auxiliar = rad;
-    seno = termo_auxiliar;
+    double termo_sen = rad;
+    seno = termo_sen;
 
-    for(int i = 1; i <= indice; i++){
-//     |valor atual sin|        |potencia|   |         Fatorial          |
-        termo_auxiliar *= -1.0 * rad * rad / ((2.0 * i) * (2.0 * i + 1.0));
-        seno += termo_auxiliar;
+    for(int i = 1; i < indice; i++){
+    // Multiplicador: -x^2 / ((2i)*(2i+1))
+        termo_sen *= -1.0 * rad * rad / ((2.0 * i) * (2.0 * i + 1.0));
+        seno += termo_sen;
     }
 
     //Cosseno
-    termo_auxiliar = 1.0;
-    cosseno = termo_auxiliar;
-    for(int i = 1; i <= indice; i++){
-//     |valor atual cos|        |potencia|   |         Fatorial          |
-        termo_auxiliar *= -1.0 * rad * rad / ((2.0 * i - 1) * (2.0 * i));
-        cosseno += termo_auxiliar;
+    double termo_cos = 1.0;
+    cosseno = termo_cos;
+    for(int i = 1; i < indice; i++){
+    // Multiplicador: -x^2 / ((2i)*(2i+1))
+        termo_cos *= -1.0 * rad * rad / ((2.0 * i - 1) * (2.0 * i));
+        cosseno += termo_cos;
     }
 
     //Valores muito pequenos passam a ser zero
@@ -62,11 +78,13 @@ void Serie_Taylor(const double rad, const short indice, double &seno, double &co
 
 
     cout << endl;
-    cout << fixed << setprecision(erro);
+    cout << fixed << setprecision(range);
+    cout << "--------------------------------------------------" << endl;
     cout << "Para a Serie de Taylor (n = " << indice << ")" << endl;
     cout << "os valores de seno e cosseno ficam: " << endl;
     cout << "Seno: " << seno << endl;
     cout << "Cosseno: " << cosseno << endl;
+
 
     cout << endl;
 
@@ -76,7 +94,7 @@ void detecta_erro(const double &cosseno_C, const double &cosseno_T, const double
     double erroAbsoluto = 0;
     double erroPorcentual = 0;
 
-    cout << fixed << setprecision(erro);
+    cout << fixed << setprecision(range);
 
     cout << "Seno" << endl;
     erroAbsoluto = abs(Seno_C - Seno_T);
@@ -98,20 +116,22 @@ void detecta_erro(const double &cosseno_C, const double &cosseno_T, const double
     erroAbsoluto = abs(cosseno_C - cosseno_T);
     erroAbsoluto = ValorMin(erroAbsoluto);
 
-    if (abs(Seno_C) < 1e-10) { // Se o valor real for considerado zero
+    if (abs(cosseno_C) < 1e-10) { // Se o valor real for considerado zero
         cout << "Erro Absoluto: " << erroAbsoluto << endl;
         cout << "Erro Porcentual: Indefinido (divisao por zero)" << endl;
+        cout << "--------------------------------------------------" << endl;
     } else {
         erroPorcentual = (erroAbsoluto / abs(cosseno_C)) * 100;
         erroPorcentual = ValorMin(erroPorcentual);
         cout << "Erro Absoluto: " << erroAbsoluto << endl;
         cout << "Erro Porcentual: " << erroPorcentual << "%" << endl;
+        cout << "--------------------------------------------------" << endl;
     }
 }
 
 int main()
 {
-    double num = 0;
+    float num = 0;
     //Cosseno e Seno Comum, feitos com as funções sin() e cos()
     double cos = 0, sin = 0;
 
@@ -120,29 +140,20 @@ int main()
 
 
     cout << "Digite um angulo em graus para saber o seno e o cosseno dele" << endl;
-    cout << "Digite aqui: ";
-    cin >> num;
+    LeValor(num);
 
     double radiano = num * (PI / 180);
 
+    cout << endl;
+    cout << "Para " << num << "°" << endl;
     cos_sin(radiano, sin, cos);
     cout << endl;
 
-
-    cout << "Para uma Serie de n = 40";
-    cout << "\t";
-    cout << "Para uma Serie de n = 40";
     Serie_Taylor(radiano, MIN, sen_T, cos_T);
-    cout << "\t";
-    Serie_Taylor(radiano, MAX, sen_T, cos_T);
-    cout << endl;
+    cout << "Vamos Analisar os erros" << endl;
     detecta_erro(cos, cos_T, sin, sen_T);
     cout << endl;
 
-
-
-
-    cout << "Para uma Serie de n = 40";
     Serie_Taylor(radiano, MAX, sen_T, cos_T);
     cout << "Vamos avaliar os erros !" << endl;
     detecta_erro(cos, cos_T, sin, sen_T);

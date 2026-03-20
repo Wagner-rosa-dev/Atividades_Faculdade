@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <limits>
 
 
 //------------------------------------------
@@ -18,7 +19,7 @@ typedef struct INFO_SERVICO INFO;
 //------------------------------------------
 struct INFO_CADASTRO{
     INFO TIPO;
-    int valor;
+    float valor;
     int codigo_cliente;
 
 };
@@ -46,11 +47,11 @@ struct MES{
 typedef struct MES MES;
 //------------------------------------------
 
-constexpr inline void limpatela(){
+inline void limpatela(){
     std::cout << "\033[2J\033[1;1H";
 }
 
-constexpr inline void limpabuffer(){
+inline void limpabuffer(){
     std::cin.ignore();
 }
 
@@ -62,7 +63,32 @@ bool codigoExiste(const int codigo, const std::vector<INFO> tipos_servicos);
 
 void Cadastro_Servico(MES &mes_atual, std::vector<INFO> tipos);
 
+void exibirDia(const MES &mes_atual, int &opcao);
 
+void exibirIntervalo(const MES &meu_atual, int &opcao);
+
+void exibirMes(const MES &mes_atual, int &opcao);
+
+inline void LeValor(auto& valor, std::string mensagem ){
+    while(true){
+        std::cout << mensagem;
+
+        if(std::cin >> valor){
+            limpabuffer();
+            break;
+        } else{
+            std::cout << "Erro: Entrada Inválida! Por favor, digite novamente\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        }
+    }
+}
+
+inline void LeValor(std::string &valor, std::string mensagem ){
+    std::cout << mensagem;
+    std::getline(std::cin, valor);
+}
 
 
 #endif // REGISTRO_H

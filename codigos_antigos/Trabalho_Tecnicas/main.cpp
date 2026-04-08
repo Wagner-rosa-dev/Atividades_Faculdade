@@ -2,17 +2,18 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <numbers>
+//#include <numbers>
 
 using namespace std;
 
-//constexpr serve para passar esse valores em tempo de compilação
+//constexpr serve para passar esses valores em tempo de compilação
 constexpr int MIN = 3;
 constexpr int MAX = 40;
 constexpr double PI = std::numbers::pi;
 
 //range dos erros do setprecision
 constexpr int range = 6;
+
 
 void espaco(){
     cout << "--------------------------------------------------" << endl;

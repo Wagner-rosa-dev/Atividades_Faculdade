@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(Atividade3Lista6-27-03-26 main.cpp
-    banco.h banco.cpp)
+    banco.h banco.cpp
+    data.h data.cpp
+)
 
 include(GNUInstallDirs)
 install(TARGETS Atividade3Lista6-27-03-26

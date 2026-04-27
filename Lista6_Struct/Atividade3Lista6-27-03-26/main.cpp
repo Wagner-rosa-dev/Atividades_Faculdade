@@ -1,19 +1,19 @@
 #include "banco.h"
 
-#include <cstdint>
 #include <iostream>
 #include <vector>
 
 using namespace std;
-
 
 int main()
 {
     int opcao = 0;
 
     std::vector<CLIENTES> clientes;
+    CADASTRO cadastrar;
 
-    CLIENTES obj1;
+
+    CLIENTES obj1, obj2;
 
     obj1.cod_cli = 100;
     obj1.nome = "Wagner";
@@ -36,10 +36,10 @@ int main()
     do{
         limpatela();
 
-        //Andamento
+        //Completo/por enquanto
         cout << "1. Cadastrar um Cliente!" << endl;
 
-
+        //Andamento
         cout << "2. Cadastrar um Documento" << endl;
         cout << "3. Excluir um Cliente" << endl;
         cout << "4. Excluir Documentos Individuais" << endl;
@@ -58,7 +58,7 @@ int main()
             limpatela();
 
             cout << "Bem vindo ao cadastro de Cliente!" << endl;
-            cad_cliente(clientes);
+            cadastrar.cad_cliente(clientes);
 
             cout << "Cadastro de Cliente realizado com sucesso!" << endl;
             cout << "Deseja retornar ao menu ? digite 0 para voltar" << endl;
@@ -67,6 +67,12 @@ int main()
 
             break;
         case 2:
+            limpatela();
+
+            cout << "Bem vindo ao cadastro de Documento" << endl;
+            cadastrar.cad_documento(opcao, clientes);
+
+
             break;
         case 3:
             break;
@@ -80,7 +86,7 @@ int main()
             limpatela();
 
             cout << "Bem vindo a alteração de informações" << endl;
-            altera_cliente(clientes, opcao);
+            cadastrar.altera_cliente(clientes, opcao);
 
 
 

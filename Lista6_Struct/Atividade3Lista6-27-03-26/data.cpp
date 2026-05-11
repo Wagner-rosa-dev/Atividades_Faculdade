@@ -4,6 +4,8 @@ void DATA::change(short dia, short mes, short ano){
     m_dia = dia;
     m_mes = mes;
     m_ano = ano;
+
+    validate();
 }
 
 short DATA::lastDayOfMonth() const{

@@ -44,9 +44,9 @@ public:
 
 
     bool m_valid = false;
-    short m_dia = 0;
-    short m_mes = 0;
-    short m_ano = 0;
+    short m_dia {0};
+    short m_mes {0};
+    short m_ano {0};
 
 
 };

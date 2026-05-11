@@ -26,7 +26,7 @@ void CLIENTES::Cria_Data(short &dia, short &mes, short &ano){
 
         DATA data(dia, mes, ano);
 
-        if(m_valid){
+        if(data.m_valid){
             break;
         }
 
@@ -38,7 +38,6 @@ void CLIENTES::Cria_Data(short &dia, short &mes, short &ano){
 void CLIENTES::Validacao_DATA(std::vector<CLIENTES> &clientes, const int indice, bool &juros, std::string &dataV, std::string &dataP){
     short diaP, mesP, anoP;
     short diaV, mesV, anoV;
-    std::stringstream V, P;
 
     std::cout << std::endl;
     std::cout << "Vamos para inclusão de datas e analises das mesmas!" << std::endl;
@@ -46,25 +45,14 @@ void CLIENTES::Validacao_DATA(std::vector<CLIENTES> &clientes, const int indice,
     std::cout << "Data Pagamento" << std::endl;
     Cria_Data(diaP, mesP, anoP);
 
-
-    DATA m_dataV(diaV, mesV, anoV);
+    DATA Pagamento(diaP, mesP, anoP);
 
     std::cout << "Data Vencimento" << std::endl;
     Cria_Data(diaV, mesV, anoV);
 
+    DATA Vencimento(diaV, mesV, anoV);
 
-    DATA m_dataP(diaV, mesV, anoV);
-
-    V << diaV << "/" << mesV << "/"<< anoV;
-    P << diaP << "/" << mesP << "/"<< anoP;
-
-    dataV = V.str();
-    dataP = P.str();
-
-
-
-
-    if(dataV < dataP){
+    if(Pagamento < Vencimento){
         std::cout << "Conta atrasada! Um juros de 5% do valor será incrementado!" << std::endl;
         juros = true;
     }

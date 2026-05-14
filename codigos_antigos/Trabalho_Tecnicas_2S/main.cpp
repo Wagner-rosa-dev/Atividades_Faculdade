@@ -35,6 +35,11 @@ struct EstatiscaPais{
     int serie = 0;
 };
 
+struct classificacao{
+    string ano;
+    string classificacao;
+};
+
 //função auxiliar para melhor visual em execução
 void limpatela(){
     std::cout << "\033[2J\033[1;1H";
@@ -56,7 +61,6 @@ void conta_linha(string ArquivoParaContagem, int &count){
         }
         Arquivo.close();
     }
-
 }
 
 /**
@@ -69,6 +73,7 @@ void criar_tabela(string Arquivo_csv, Catalogo catalogo[], int quantidade_linhas
     //Abre o arquivo.csv
     ifstream NetflixFile(Arquivo_csv);
     string linha_texto;
+
 
     //pula a primeira linha, que seria apenas o nome das colunas
     getline(NetflixFile, linha_texto);
@@ -226,6 +231,88 @@ void top_paises(const int quantidade_linhas, const Catalogo *catalogo){
     }
 
     delete[] lista_paises;
+}
+
+void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
+    /**
+     * decobrir quantas categorias são
+     * descobrir quantos anos são
+     * contar quantas vezes se repete por ano achado e colocar na categoria selecionada
+     * os anos tem que estar ordenados do maior para o menor
+     *
+     */
+
+    //classificacao *tabela_busca = new classificacao[quant_linhas];
+    string *lista_anos = new string[quant_linhas];
+    string *lista_classificacoes = new string[quant_linhas];
+
+    int anos_unicos = 0;
+    int cla_unicos = 0;
+
+    for(int i = 0; i < quant_linhas; i++){
+        string ano_atual = catalogo[i].release_year;
+        string cla_atual = catalogo[i].rating;
+
+        if(ano_atual.empty()) continue;
+        if(cla_atual.empty()) continue;
+
+        bool ano_existe = false;
+        bool cla_existe = false;
+
+        //para os anos validos e unicos
+        for(int j = 0; j < anos_unicos; j++){
+            if(ano_atual == lista_anos[j]){
+                ano_existe = true;
+                break;
+            }
+        }
+        if(!ano_existe){
+            lista_anos[anos_unicos] = ano_atual;
+            anos_unicos++;
+        }
+
+        //para as classificações validas e unicas
+        for(int j = 0; j < cla_unicos; j++){
+            if(cla_atual == lista_classificacoes[j]){
+                cla_existe = true;
+                break;
+            }
+        }
+        if(!cla_existe){
+            lista_classificacoes[cla_unicos] = cla_atual;
+            cla_unicos++;
+        }
+    }
+
+
+
+
+    //ordenar anos da tabela
+    for(int i = 0; i < anos_unicos - 1; i++){
+        for(int j = 0; j < anos_unicos; j++){
+            if(lista_anos[i] < lista_anos[i+1]){
+                string aux = lista_anos[i];
+                lista_anos[i] = lista_anos[i+1];
+                lista_anos[i+1] = aux;
+            }
+        }
+    }
+
+    for(int i = 0; i < anos_unicos; i++){
+        cout << lista_anos[i] << " ";
+    }
+
+    cout << endl;
+
+    for(int i = 0; i < cla_unicos; i++){
+        cout << lista_classificacoes[i] << " ";
+    }
+
+
+
+
+    delete[] lista_anos;
+    delete[] lista_classificacoes;
 
 }
 
@@ -249,16 +336,21 @@ int main()
         return 1;
     }
 
-    Catalogo *catalogo = new Catalogo[quantidade_linhas - 1];
+    //como o cabeçalho eu ignoro eu deixo so a quantidade exata de conteudo para criar o vetor na heap
+    quantidade_linhas--;
+
+    Catalogo *catalogo = new Catalogo[quantidade_linhas];
 
     criar_tabela(Arquivo_csv, catalogo, quantidade_linhas);
 
+
     while(opcao == 0){
         limpatela();
-        cout << "cast: " << catalogo[0].duration << endl;
-        cout << "Opções de operações no catálogo" << endl;
+
+        cout << "Opcoes de operações no catalogo" << endl;
         cout << "1. Leitura e armazenamento dos dados - quantos filmes e series existem" << endl;
         cout << "2. Ranking de Paises produtores" << endl;
+        cout << "3. Analise de classificacao indicativa por ano" << endl;
         cout << "Digite aqui: ";
         cin >> opcao;
 
@@ -280,12 +372,14 @@ int main()
             break;
 
         case 3:
+            class_indicativa_ano(quantidade_linhas, catalogo);
+
+            retornar(opcao);
             break;
         }
     }
 
     delete[] catalogo;
-
     return 0;
 }
 

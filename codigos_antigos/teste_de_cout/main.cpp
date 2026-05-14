@@ -120,9 +120,16 @@ void calculo_erro(double cosc, double senc, double cost, double sent){
 
 
 int main(){
-    const string espaco = "-------------------------------------------------------------------------";
 
-    cout << espaco;
+    int m_dia = 1;
+    int m_mes = 1;
+    int m_ano = 2000;
+
+    std::cout.fill(' ');
+    std::cout.width(2);
+    std::cout << m_dia << '/';
+    std::cout.width(2);
+    std::cout << m_mes << '/' << m_ano << std::endl;
 
 
     return 0;

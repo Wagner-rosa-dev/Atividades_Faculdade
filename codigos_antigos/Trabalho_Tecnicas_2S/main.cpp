@@ -6,8 +6,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
+//#include <sstream>
 #include <iomanip>
+#include <chrono>
 
 using namespace std;
 
@@ -35,10 +36,6 @@ struct EstatiscaPais{
     int serie = 0;
 };
 
-struct classificacao{
-    string ano;
-    string classificacao;
-};
 
 //função auxiliar para melhor visual em execução
 void limpatela(){
@@ -69,7 +66,7 @@ void conta_linha(string ArquivoParaContagem, int &count){
  * @param catalogo - vector principal aonde as informações serão inseridas
  * @param quantidade_linhas - valor, pré contado, das linhas para servir como limitador do laço de repetição
  */
-void criar_tabela(string Arquivo_csv, Catalogo catalogo[], int quantidade_linhas){
+void criar_tabela(string Arquivo_csv, Catalogo catalogo[], int quantidade_linhas)  {
     //Abre o arquivo.csv
     ifstream NetflixFile(Arquivo_csv);
     string linha_texto;
@@ -233,15 +230,12 @@ void top_paises(const int quantidade_linhas, const Catalogo *catalogo){
     delete[] lista_paises;
 }
 
+/**
+ * @brief class_indicativa_ano
+ * @param quant_linhas - limite para busca e definir o tamanho dos ponteiros
+ * @param catalogo - centro de busca
+ */
 void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
-    /**
-     * decobrir quantas categorias são
-     * descobrir quantos anos são
-     * contar quantas vezes se repete por ano achado e colocar na categoria selecionada
-     * os anos tem que estar ordenados do maior para o menor
-     *
-     */
-
     //classificacao *tabela_busca = new classificacao[quant_linhas];
     string *lista_anos = new string[quant_linhas];
     string *lista_classificacoes = new string[quant_linhas];
@@ -249,6 +243,7 @@ void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
     int anos_unicos = 0;
     int cla_unicos = 0;
 
+    //Aqui eu construo os dois vectors para anos e classificação unicos
     for(int i = 0; i < quant_linhas; i++){
         string ano_atual = catalogo[i].release_year;
         string cla_atual = catalogo[i].rating;
@@ -284,37 +279,120 @@ void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
         }
     }
 
-
-
-
-    //ordenar anos da tabela
+    //ordenar os anos da tabela na ordem decrescente
     for(int i = 0; i < anos_unicos - 1; i++){
         for(int j = 0; j < anos_unicos; j++){
-            if(lista_anos[i] < lista_anos[i+1]){
-                string aux = lista_anos[i];
-                lista_anos[i] = lista_anos[i+1];
-                lista_anos[i+1] = aux;
+            if(lista_anos[j] < lista_anos[j+1]){
+                string aux = lista_anos[j];
+                lista_anos[j] = lista_anos[j+1];
+                lista_anos[j+1] = aux;
             }
         }
     }
 
-    for(int i = 0; i < anos_unicos; i++){
-        cout << lista_anos[i] << " ";
+    //Uma tabela aonde eu uso o vector de anos para as linhas
+    int **tabela_cruzada = new int*[anos_unicos];
+
+    //Aqui eu crio as colunas da minha tabela de ponteiros
+    for(int i = 0; i < anos_unicos; i++) {
+        tabela_cruzada[i] = new int[cla_unicos];
+
+        //inicio todos os espaços como zero, porque vou somar com 1 mais a frente do codigo
+        for(int j = 0; j < cla_unicos; j++){
+            tabela_cruzada[i][j] = 0;
+        }
+    }
+
+    //Aqui eu procuro na linha atual a classificação do filme/serie e vejo a sua classificação
+    //caso exista os dois na linha eu somo 1 na posição dele, do contrário eu não somo nada
+    for(int i = 0; i < quant_linhas; i++){
+        string ano_atual = catalogo[i].release_year;
+        string cla_atual = catalogo[i].rating;
+
+        //Se tiver vazio ele continua o codigo
+        if(ano_atual.empty() || cla_atual.empty()) continue;
+
+        int indice_coluna = -1;
+        int indice_linha = -1;
+
+        //confere se o ano atual bate com o ano do loop e se sim adiciona ao parametro usado mais a frente no codigo
+        for(int linha = 0; linha < anos_unicos; linha++){
+            if(lista_anos[linha] == ano_atual){
+                indice_linha = linha;
+                break;
+            }
+        }
+
+        //confere se a classificação atual bate com a do loop e se sim adiciona ao parametro usado mais a frente no codigo
+        for(int col = 0; col < cla_unicos; col++){
+            if(lista_classificacoes[col] == cla_atual){
+                indice_coluna = col;
+                break;
+            }
+        }
+
+        //caso nessa linha tenha tanto o ano como a classificação ele soma 1 na posição dos mesmos
+        if(indice_coluna != -1 && indice_linha != -1){
+            tabela_cruzada[indice_linha][indice_coluna]++;
+        }
+    }
+
+    //Apenas uma lógica para exibir as informações
+    cout << "Ano  | ";
+    for(int i = 0; i < cla_unicos; i++){
+        cout << left << setw(9) <<lista_classificacoes[i] << " | ";
     }
 
     cout << endl;
 
-    for(int i = 0; i < cla_unicos; i++){
-        cout << lista_classificacoes[i] << " ";
+    for(int i = 0; i < anos_unicos; i++){
+        cout << lista_anos[i] << " | ";
+        for(int j = 0; j < cla_unicos; j++){
+            cout << left << setw(9) <<tabela_cruzada[i][j] << " | ";
+        }
+        cout << endl;
     }
 
+    //Limpa as colunas alocadas em cada linha da matriz
+    for (int i = 0; i < anos_unicos; i++) {
+        delete[] tabela_cruzada[i];
+    }
+    //Limpa o array principal da matriz
+    delete[] tabela_cruzada;
 
-
-
+    //Limpa os vetores de cabeçalho
     delete[] lista_anos;
     delete[] lista_classificacoes;
 
 }
+
+void busca_ator_diretor(const int quant_linhas, const Catalogo *catalogo){
+    string busca;
+    string linha;
+
+
+
+    cout << "Busca por: ";
+    getline(cin, busca);
+
+    for(int i = 0; i < quant_linhas; i ++){
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+}
+
+
+
 
 
 void retornar(int &opcao){
@@ -339,18 +417,29 @@ int main()
     //como o cabeçalho eu ignoro eu deixo so a quantidade exata de conteudo para criar o vetor na heap
     quantidade_linhas--;
 
+    auto inicio = std::chrono::high_resolution_clock::now();
+
     Catalogo *catalogo = new Catalogo[quantidade_linhas];
 
     criar_tabela(Arquivo_csv, catalogo, quantidade_linhas);
+
+    auto fim = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double, std::milli> duracao = fim - inicio;
 
 
     while(opcao == 0){
         limpatela();
 
+        //cout << catalogo[1].cast << endl;
+        cout << "duracao criacao tabela: " << duracao.count() << endl;
+        cout << sizeof(*catalogo) << endl;
+
         cout << "Opcoes de operações no catalogo" << endl;
         cout << "1. Leitura e armazenamento dos dados - quantos filmes e series existem" << endl;
         cout << "2. Ranking de Paises produtores" << endl;
         cout << "3. Analise de classificacao indicativa por ano" << endl;
+        cout << "4. " << endl;
         cout << "Digite aqui: ";
         cin >> opcao;
 
@@ -367,8 +456,8 @@ int main()
 
         case 2:
             top_paises(quantidade_linhas, catalogo);
-            retornar(opcao);
 
+            retornar(opcao);
             break;
 
         case 3:
@@ -376,6 +465,17 @@ int main()
 
             retornar(opcao);
             break;
+
+
+        case 4:
+
+
+            retornar(opcao);
+            break;
+
+
+
+
         }
     }
 

@@ -8,7 +8,7 @@
 #include <string>
 //#include <sstream>
 #include <iomanip>
-#include <chrono>
+#include <limits>
 
 using namespace std;
 
@@ -40,6 +40,11 @@ struct EstatiscaPais{
 //função auxiliar para melhor visual em execução
 void limpatela(){
     std::cout << "\033[2J\033[1;1H";
+}
+
+//Função auxiliar para limpar o buffer
+void limpabuffer(){
+    std::cin.ignore();
 }
 
 /**
@@ -323,7 +328,6 @@ void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
             }
         }
 
-        //confere se a classificação atual bate com a do loop e se sim adiciona ao parametro usado mais a frente no codigo
         for(int col = 0; col < cla_unicos; col++){
             if(lista_classificacoes[col] == cla_atual){
                 indice_coluna = col;
@@ -366,27 +370,143 @@ void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
 
 }
 
-void busca_ator_diretor(const int quant_linhas, const Catalogo *catalogo){
-    string busca;
-    string linha;
 
+//função auxiliar para passar o teste para minusculo
+string Minusculo(string texto){
+    string resultado = "";
 
-
-    cout << "Busca por: ";
-    getline(cin, busca);
-
-    for(int i = 0; i < quant_linhas; i ++){
-
-
-
-
-
-
-
-
-
-
+    for(char letra : texto){
+        resultado += tolower(letra);
     }
+
+    return resultado;
+}
+
+//função auxiliar para pegar somente o primeiro pais do vector
+string primeiro_pais(string paises){
+    stringstream fluxo(paises);
+
+    string primeiro_pais;
+    getline(fluxo, primeiro_pais, ',');
+    return primeiro_pais;
+}
+
+/**
+ * @brief busca_ator_diretor
+ * @param quant_linhas - limite do loop
+ * @param catalogo - fonte de informações
+ * @param nome - valor digitado pelo usuario que sera feito a busca
+ */
+void busca_ator_diretor(const int quant_linhas, const Catalogo *catalogo, const string nome){
+    string busca_minuscula = Minusculo(nome);
+
+    cout << "Resultado da busca por: " << nome << endl;
+
+    //aqui o programa uso o .find() para procurar o valor dentro do texto do vetor
+    for(int i = 0; i < quant_linhas; i++){
+        string diretor_atual = catalogo[i].director;
+        string elenco_atual = catalogo[i].cast;
+
+        if(diretor_atual.empty() && elenco_atual.empty()) continue;
+
+        //passa tudo para minusculo
+        string diretor_minusculo = Minusculo(diretor_atual);
+        string elenco_minusculo = Minusculo(elenco_atual);
+
+        bool achou_diretor = (diretor_minusculo.find(busca_minuscula) != string::npos);
+        bool achou_elenco = (elenco_minusculo.find(busca_minuscula) != string::npos);
+
+        //formatação de exibição
+        if(achou_elenco || achou_diretor) {
+            cout << left <<"- " << setw(50)<< catalogo[i].title << " | "
+                 << setw(8) <<catalogo[i].type << " | "
+                 << catalogo[i].release_year << " | "
+                 << setw(6) <<catalogo[i].rating << " | "
+                 << primeiro_pais(catalogo[i].country) << endl;
+        }
+    }
+}
+
+
+
+/**
+ * @brief analisar_duracao
+ * @param quant_linhas - limite de loops
+ * @param catalogo - fonte das informações
+ */
+void analisar_duracao(int quant_linhas, const Catalogo *catalogo){
+    int soma_filmes = 0;
+    int soma_temporadas = 0;
+
+    string titulo_maior_filme = "";
+    int maior_filme = 0;
+
+    string titulo_menor_filme = "";
+    int menor_filme = 999;
+
+    string titulo_maior_serie = "";
+    int maior_temporadas = 0;
+
+    int quant_filme = 0;
+    int quanti_serie = 0;
+
+    //
+    for (int i = 0; i < quant_linhas; i++) {
+        string tipo = catalogo[i].type;
+        string duracao_texto = catalogo[i].duration;
+        string titulo = catalogo[i].title;
+
+        if (duracao_texto.empty()) {
+            continue;
+        }
+
+        int duracao_numero = stoi(duracao_texto);
+
+        if (tipo == "Movie") {
+            soma_filmes += duracao_numero;
+            quant_filme++;
+
+            if (duracao_numero > maior_filme) {
+                maior_filme = duracao_numero;
+                titulo_maior_filme = titulo;
+            }
+
+            if (duracao_numero < menor_filme) {
+                menor_filme = duracao_numero;
+                titulo_menor_filme = titulo;
+            }
+        }
+        else if (tipo == "TV Show") {
+            soma_temporadas += duracao_numero;
+            quanti_serie++;
+
+            if (duracao_numero > maior_temporadas) {
+                maior_temporadas = duracao_numero;
+                titulo_maior_serie = titulo;
+            }
+        }
+    }
+
+    int media_filme = (soma_filmes / quant_filme);
+    int media_serie = (soma_temporadas / quanti_serie);
+
+    cout << "Média de duração dos filmes: " << media_filme << " Min" <<endl;
+    cout << "\nO filme de maior duração é: " << titulo_maior_filme << endl;
+    cout <<"Com " << maior_filme << " Min"<<endl;
+
+    cout << "\nO filme de menor duração é: " << titulo_menor_filme << endl;
+    cout << "Com "<< menor_filme << " Min" << endl;
+    cout << endl;
+
+
+
+
+    cout << "Média de temporadas por serie: " << media_serie << " Temp" <<endl;
+    cout << "Serie com a maior quantidade de temporadas: " << titulo_maior_serie << endl;
+    cout << "Quantidade de temporadas: " << maior_temporadas << endl;
+
+
+
 
 
 }
@@ -417,29 +537,24 @@ int main()
     //como o cabeçalho eu ignoro eu deixo so a quantidade exata de conteudo para criar o vetor na heap
     quantidade_linhas--;
 
-    auto inicio = std::chrono::high_resolution_clock::now();
 
     Catalogo *catalogo = new Catalogo[quantidade_linhas];
 
     criar_tabela(Arquivo_csv, catalogo, quantidade_linhas);
-
-    auto fim = std::chrono::high_resolution_clock::now();
-
-    std::chrono::duration<double, std::milli> duracao = fim - inicio;
 
 
     while(opcao == 0){
         limpatela();
 
         //cout << catalogo[1].cast << endl;
-        cout << "duracao criacao tabela: " << duracao.count() << endl;
         cout << sizeof(*catalogo) << endl;
 
         cout << "Opcoes de operações no catalogo" << endl;
         cout << "1. Leitura e armazenamento dos dados - quantos filmes e series existem" << endl;
         cout << "2. Ranking de Paises produtores" << endl;
         cout << "3. Analise de classificacao indicativa por ano" << endl;
-        cout << "4. " << endl;
+        cout << "4. Busca por nomes" << endl;
+        cout << "5. Análise de duração" << endl;
         cout << "Digite aqui: ";
         cin >> opcao;
 
@@ -468,9 +583,38 @@ int main()
 
 
         case 4:
+        {
+            limpabuffer();
+            limpatela();
+            string nome;
 
+            cout << "Digite o nome que deseja buscar: ";
+            getline(cin, nome);
+
+            busca_ator_diretor(quantidade_linhas, catalogo, nome);
 
             retornar(opcao);
+            break;
+        }
+
+        case 5:
+            limpatela();
+            analisar_duracao(quantidade_linhas, catalogo);
+            retornar(opcao);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             break;
 
 

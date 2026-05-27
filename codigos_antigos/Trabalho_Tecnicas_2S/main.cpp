@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-//#include <sstream>
+#include <sstream>
 #include <iomanip>
 #include <limits>
 
@@ -45,6 +45,22 @@ void limpatela(){
 //Função auxiliar para limpar o buffer
 void limpabuffer(){
     std::cin.ignore();
+}
+
+//função auxiliar para ler o valor int da opcao
+void Leopcao(int &num){
+    while(true){
+        cout << "Digite aqui: ";
+        cin >> num;
+        if(cin.fail() || cin.peek() != '\n' || num < 0 || num > 6){
+            cout << "Valor não é valido, tente novamente!" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else{
+            break;
+        }
+    }
 }
 
 /**
@@ -370,7 +386,6 @@ void class_indicativa_ano(int quant_linhas, const Catalogo *catalogo){
 
 }
 
-
 //função auxiliar para passar o teste para minusculo
 string Minusculo(string texto){
     string resultado = "";
@@ -399,6 +414,7 @@ string primeiro_pais(string paises){
  */
 void busca_ator_diretor(const int quant_linhas, const Catalogo *catalogo, const string nome){
     string busca_minuscula = Minusculo(nome);
+    int resultados_encontrados = 0;
 
     cout << "Resultado da busca por: " << nome << endl;
 
@@ -423,11 +439,18 @@ void busca_ator_diretor(const int quant_linhas, const Catalogo *catalogo, const 
                  << catalogo[i].release_year << " | "
                  << setw(6) <<catalogo[i].rating << " | "
                  << primeiro_pais(catalogo[i].country) << endl;
+
+            resultados_encontrados++;
         }
     }
+
+    cout << endl;
+    if(resultados_encontrados == 0){
+        cout << "Nenhuma produção encontrada para: " << nome << endl;
+    } else{
+        cout << "Total de produções encontradas: " << resultados_encontrados << endl;
+    }
 }
-
-
 
 /**
  * @brief analisar_duracao
@@ -450,7 +473,7 @@ void analisar_duracao(int quant_linhas, const Catalogo *catalogo){
     int quant_filme = 0;
     int quanti_serie = 0;
 
-    //
+    //analisa linha a linha, passa a duração para int e soma quando identifado o seu tipo
     for (int i = 0; i < quant_linhas; i++) {
         string tipo = catalogo[i].type;
         string duracao_texto = catalogo[i].duration;
@@ -460,8 +483,10 @@ void analisar_duracao(int quant_linhas, const Catalogo *catalogo){
             continue;
         }
 
+        //usando "stoi" para passar o valor de string para int
         int duracao_numero = stoi(duracao_texto);
 
+        //faz a identificação e soma quando for preciso
         if (tipo == "Movie") {
             soma_filmes += duracao_numero;
             quant_filme++;
@@ -490,6 +515,7 @@ void analisar_duracao(int quant_linhas, const Catalogo *catalogo){
     int media_filme = (soma_filmes / quant_filme);
     int media_serie = (soma_temporadas / quanti_serie);
 
+    //formatação de saida da mensagem
     cout << "Média de duração dos filmes: " << media_filme << " Min" <<endl;
     cout << "\nO filme de maior duração é: " << titulo_maior_filme << endl;
     cout <<"Com " << maior_filme << " Min"<<endl;
@@ -498,27 +524,104 @@ void analisar_duracao(int quant_linhas, const Catalogo *catalogo){
     cout << "Com "<< menor_filme << " Min" << endl;
     cout << endl;
 
-
-
-
     cout << "Média de temporadas por serie: " << media_serie << " Temp" <<endl;
     cout << "Serie com a maior quantidade de temporadas: " << titulo_maior_serie << endl;
     cout << "Quantidade de temporadas: " << maior_temporadas << endl;
-
-
-
-
-
 }
 
+//Função obrigatória do exercicio, apenas cria um vetor dinamico para achar os generos, logicas parecidas ja estão presentes no codigo
+//Procurar em class_indicativa_ano, la tem um exemplo detalhado do processo
+void acha_genero(const int quantidade_linhas, const Catalogo *catalogo, string *lista_categoria, int &gen_unicos){
 
+    for(int i = 0; i < quantidade_linhas; i++){
+        stringstream fluxo(catalogo[i].listed_in);
 
+        string gen_atual;
 
+        while(getline(fluxo, gen_atual, ',')){
+            if(gen_atual.empty()) continue;
 
+            bool gen_existe = false;
+
+            if(gen_atual[0] == ' ') gen_atual = gen_atual.substr(1);
+
+            for(int j = 0; j < gen_unicos; j++){
+                if(gen_atual == lista_categoria[j]){
+                    gen_existe = true;
+                    break;
+                }
+            }
+            if(!gen_existe){
+                lista_categoria[gen_unicos] = gen_atual;
+                gen_unicos++;
+            }
+        }
+    }
+
+    cout << "Esses são os generos presentes para fazer o relatorio!" << endl;
+    for(int i = 0; i < gen_unicos; i++){
+        cout << "Generos: " << lista_categoria[i] << endl;
+    }
+}
+
+bool busca_palavra(const string genero, const string *lista_categoria, const int limite){
+    for(int i = 0; i < limite; i++){
+        if(genero == Minusculo(lista_categoria[i])) return true;
+    }
+    return false;
+}
+
+void cria_arquivo(const int quantidade_linhas, const Catalogo *catalogo, const int gen_unico, string *lista_categoria){
+        ofstream relatorio("relatorio_genero.csv");
+        relatorio << "\"tittle\";\"type\";\"release_year\";\"rating\";\"country\";\"duration\"\n";
+
+        char genero_usuario[50];
+        cin.ignore();
+        while(true){
+            cout << "Informe um genero a ser feito um relatorio!" << endl;
+            cout << "Digite aqui: ";
+            cin.getline(genero_usuario, 50);
+
+            string genero_busca = Minusculo(genero_usuario);
+
+            if(!busca_palavra(genero_busca, lista_categoria, gen_unico)){
+                cout << "\nGenero Inválido, Digite um genero da lista!" << endl;
+            } else{
+                for(int i = 0; i < quantidade_linhas; i++){
+                    string genero_atual = Minusculo(catalogo[i].listed_in);
+
+                    if(genero_atual.find(genero_busca) != string::npos){
+                        relatorio << "\"" << catalogo[i].title        << "\";"
+                                  << "\"" << catalogo[i].type         << "\";"
+                                  << "\"" << catalogo[i].release_year << "\";"
+                                  << "\"" << catalogo[i].rating       << "\";"
+                                  << "\"" << catalogo[i].country      << "\";"
+                                  << "\"" << catalogo[i].duration     << "\"\n";
+                    }
+                }
+                break;
+            }
+    }
+
+    relatorio.close();
+}
+
+//função auxiliar para se manter no MENU
 void retornar(int &opcao){
+    limpabuffer();
     cout << "\nPara retornar ao menu digite 0" << endl;
-    cout << "Digite aqui: ";
-    cin >> opcao;
+    while(true){
+        cout << "Digite aqui: ";
+        cin >> opcao;
+        if(cin.fail() || cin.peek() != '\n' || opcao != 0){
+            cout << "Valor não é valido, tente novamente!" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else{
+            break;
+        }
+    }
 }
 
 int main()
@@ -534,7 +637,7 @@ int main()
         return 1;
     }
 
-    //como o cabeçalho eu ignoro eu deixo so a quantidade exata de conteudo para criar o vetor na heap
+    //como o cabeçalho eu ignoro eu deixo so a quantidade exata de conteudo para criar o vetor
     quantidade_linhas--;
 
 
@@ -545,19 +648,14 @@ int main()
 
     while(opcao == 0){
         limpatela();
-
-        //cout << catalogo[1].cast << endl;
-        cout << sizeof(*catalogo) << endl;
-
         cout << "Opcoes de operações no catalogo" << endl;
         cout << "1. Leitura e armazenamento dos dados - quantos filmes e series existem" << endl;
         cout << "2. Ranking de Paises produtores" << endl;
         cout << "3. Analise de classificacao indicativa por ano" << endl;
         cout << "4. Busca por nomes" << endl;
         cout << "5. Análise de duração" << endl;
-        cout << "Digite aqui: ";
-        cin >> opcao;
-
+        cout << "6. Relatorio por genero" << endl;
+        Leopcao(opcao);
 
         switch(opcao){
         case 1:
@@ -570,17 +668,18 @@ int main()
             break;
 
         case 2:
+            limpatela();
             top_paises(quantidade_linhas, catalogo);
 
             retornar(opcao);
             break;
 
         case 3:
+            limpatela();
             class_indicativa_ano(quantidade_linhas, catalogo);
 
             retornar(opcao);
             break;
-
 
         case 4:
         {
@@ -588,11 +687,17 @@ int main()
             limpatela();
             string nome;
 
-            cout << "Digite o nome que deseja buscar: ";
-            getline(cin, nome);
+            while(true){
+                cout << "Digite o nome que deseja buscar(Minimo 2 letras): ";
+                getline(cin, nome);
 
-            busca_ator_diretor(quantidade_linhas, catalogo, nome);
-
+                if(nome.empty() || nome.length() < 2){
+                    cout << "Erro: Nome Inválido ou muito curto. Tente novamente!" << endl;
+                } else{
+                    busca_ator_diretor(quantidade_linhas, catalogo, nome);
+                    break;
+                }
+            }
             retornar(opcao);
             break;
         }
@@ -601,25 +706,20 @@ int main()
             limpatela();
             analisar_duracao(quantidade_linhas, catalogo);
             retornar(opcao);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             break;
 
+        case 6:
+            limpatela();
+            string *lista_categoria = new string[quantidade_linhas];
+            int gen_unico = 0;
 
+            acha_genero(quantidade_linhas, catalogo, lista_categoria, gen_unico);
 
+            cria_arquivo(quantidade_linhas, catalogo, gen_unico, lista_categoria);
 
+            delete[] lista_categoria;
+            retornar(opcao);
+            break;
         }
     }
 

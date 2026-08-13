@@ -1,0 +1,61 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-15ba81aa4c8dcf8011f9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Atividade1Lista4-26-02-26",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Atividade1Lista4-26-02-26::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Atividade1Lista4-26-02-26-Debug-a18e12eab1a90d4c195a.json",
+					"name" : "Atividade1Lista4-26-02-26",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/wagner/addgit/Atividade1Lista4-26-02-26/build/Desktop_Qt_6_10_0-Debug",
+		"source" : "/home/wagner/addgit/Lista4_Array_Estatico/Atividade1Lista4-26-02-26"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

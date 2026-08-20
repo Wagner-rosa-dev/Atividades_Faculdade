@@ -1,126 +1,55 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
-const int tamanho = 7;
-int matriz[tamanho][tamanho] = {
-    {1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 1, 0, 0, 0, 3},
-    {1, 0, 1, 1, 0, 1, 1},
-    {1, 0, 0, 0, 0, 1, 1},
-    {1, 1, 0, 1, 1, 0, 1},
-    {1, 2, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1}
+
+
+struct Teste1{
+    int teste = 1;
+    std::string testenome;
 };
 
-int Parede = 1;
-int Jogador = 2;
-int Saida = 3;
-int Caminho = 0;
+struct Teste2{
+    int teste = 1;
 
-int jogadorI = 5;
-int jogadorJ = 1;
+};
 
-int saidaI = 1;
-int saidaJ = 6;
-
-
-void exibirlabirinto(){
-
-    for (int i = 0; i < tamanho; i++) {
-        for (int j = 0; j < tamanho; j++) {
-
-            if (i == saidaI && j == saidaJ && matriz[i][j] != Jogador) {
-                cout << " S ";
-            }
-            else if (matriz[i][j] == Caminho) {
-                cout << " . ";
-            } else if (matriz[i][j] == Parede) {
-                cout << " # ";
-            } else if (matriz[i][j] == Jogador) {
-                cout << " J ";
-            }
-        }
-        cout << endl;
-    }
+template <typename T>
+int somaUm(T &temp){
+    return temp.teste++;
 }
 
-
-void moverjogador(){
-
-    char direcao;
-
-    cout << "Escolha uma direção (w - cima | a - esquerda | s - baixo | d - direita): " << endl;
-    cin >> direcao;
-
-    int proximoI = jogadorI;
-    int proximoJ = jogadorJ;
-
-    if (direcao == 'd'){
-        proximoJ++;
-    }
-    else if (direcao == 'a') {
-        proximoJ--;
-    }
-    else if (direcao == 'w') {
-        proximoI--;
-    }
-    else if (direcao == 's') {
-        proximoI++;
-    } else {
-        cout << "Direcao invalida!" << endl;
-        return;
-    }
-
-    if (proximoI < 0 || proximoI >= tamanho || proximoJ < 0 || proximoJ >= tamanho) {
-        return;
-    }
-
-    int valorProximaCasa = matriz[proximoI][proximoJ];
-
-    if (valorProximaCasa == Parede) {
-        cout << "Voce bateu na parede!" << endl;
-    }
-    else {
-
-        matriz[jogadorI][jogadorJ] = Caminho;
-
-        matriz[proximoI][proximoJ] = Jogador;
-
-
-        jogadorI = proximoI;
-        jogadorJ = proximoJ;
-    }
-
+void teste(std::vector<Teste1> teste){
+    getline(cin, teste[0].testenome);
 }
 
-
-bool verificarVitoria(){
-
-    if (jogadorI == saidaI && jogadorJ == saidaJ){
-        return true;
-    } else {
-        return false;
-    }
-
-
-}
 
 
 int main() {
 
-    exibirlabirinto();
+    std::vector<Teste1> obj;
 
-    while(true) {
-        moverjogador();
+    Teste1 teste;
+    teste.testenome = "asd";
+    teste.teste = 1;
 
-        exibirlabirinto();
+    obj.push_back(teste);
 
-        if (verificarVitoria()){
-            cout << "Parabens voce venceu!!!" << endl;
-            break;
-        }
+    teste(obj);
 
-    }
+
+
+
+    cout << obj[0].testenome << endl;
+
+
+
+
+
+
+
+
+
 
     return 0;
 }

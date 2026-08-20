@@ -45,11 +45,12 @@ void LeValor(std::string mensagem, int &valor, int min, int max){
     }
 }
 
-void LeValor(std::string mensagem, std::string &endereco, int MAX_TAM){
+void LeValor(std::string mensagem, std::string &temp, int MAX_TAM){
+    limpabuffer();
     while(true){
         std::cout << mensagem << std::endl;
-        getline(std::cin, endereco);
-        if(endereco.length() > MAX_TAM){
+        getline(std::cin, temp);
+        if(temp.length() > MAX_TAM){
             std::cout << "Erro: Numero maximo de caracteres atingido! " << std::endl;
             std::cout << "Por favor digite novamente, Max(" << MAX_TAM << " caracteres)" << std::endl;
         } else{
@@ -61,7 +62,7 @@ void LeValor(std::string mensagem, std::string &endereco, int MAX_TAM){
 
 
 
-void CadastraCliente(std::vector<Cliente> V_Cliente, int &opcao){
+void CadastraCliente(std::vector<Cliente> &V_Cliente, int &opcao){
     Cliente temp;
 
     std::cout << "Voce selecionou a opcao de cadastrar um cliente!" << std::endl;
@@ -109,10 +110,15 @@ void CadastraCliente(std::vector<Cliente> V_Cliente, int &opcao){
     LeValor(retornoMenu, opcao);
 }
 
-void ModificaCliente(std::vector<Cliente> V_Cliente, int &opcao){
+
+
+
+
+
+
+void ModificaCliente(std::vector<Cliente> &V_Cliente, int &opcao){
     int codigo;
     int indice;
-    std::string temp_endereco;
     std::string temp_telefone;
 
 
@@ -135,20 +141,8 @@ void ModificaCliente(std::vector<Cliente> V_Cliente, int &opcao){
                 int decisao = 0;
                 do{
 
-                    std::cout << "\nVoce selecionou para editar o Endereco!" << std::endl;
-                    std::cout << "Assim esta o endereco do Cliente de Codigo: " << V_Cliente[indice].codigo << std::endl;
-                    std::cout << "Endereco: " << V_Cliente[indice].Endereco;
 
-                    std::cout << "\nDigite abaixo o novo endereco" << std::endl;
-                    limpabuffer();
-
-                    LeValor("Digite aqui(rua,cidade): ", temp_endereco, 50);
-
-                    V_Cliente[indice].Endereco = temp_endereco;
-
-                    std::cout << "Modificacao feita com sucesso!" << std::endl;
-
-                    std::cout << "Confira o resultado abaixo!." << std::endl;
+                    Modifica(V_Cliente[indice].Endereco, "Endereco", "Cliente", V_Cliente[indice].codigo);
 
                     std::cout << "Codigo: " << V_Cliente[indice].codigo << std::endl;
                     std::cout << "Endereco: " << V_Cliente[indice].Endereco << "   <---- Item modificado " << std::endl;
@@ -223,4 +217,135 @@ void ModificaCliente(std::vector<Cliente> V_Cliente, int &opcao){
         std::cout << "O codigo do Cliente informado nao existe" << std::endl;
         LeValor( retornoMenu, opcao);
     }
+}
+
+void CadastroProduto(std::vector<Produto> &V_Produto, int &opcao){
+    Produto temp;
+
+    std::cout << "Voce selecionou a opcao de cadastrar um Produto!" << std::endl;
+    std::cout << "O programa ia gerar um codigo automaticamente para voce!" << std::endl;
+
+
+    temp.codigo = rand() % 200;
+
+
+    if(!V_Produto.empty()){
+        while(true){
+            if(ExisteCodigo(V_Produto, temp.codigo)){
+                std::cout << "Codigo existente detectado" << std::endl;
+                std::cout << "Vou gerar um novo codigo para o Cliente e passara por outra verificacao!" << std::endl;
+                temp.codigo = rand() & 200;
+            } else{
+                break;
+            }
+        }
+    }
+
+    std::cout << "\nCodigo do Produto cadastrado com sucesso!" << std::endl;
+
+
+
+    std::cout << "\nO codigo do Produto novo a ser cadastrado é " << temp.codigo << std::endl;
+    std::cout << "Agora digite a discricao do Produto (Max: 50 letras): " << std::endl;
+    LeValor("Digite aqui: ", temp.Descricao, 50);
+
+    std::cout << "Descricao cadastrada com sucesso!" << std::endl;
+
+    std::cout << "Quantas unidades desse produto existem ?" << std::endl;
+
+    while(true){
+        std::cin >> temp.Qtdade_estoque;
+
+        if(std::cin.fail() || std::cin.peek() != '\n' || temp.Qtdade_estoque < 0){
+            std::cout << "Erro: Entrada Inválida! Por favor, digite novamente\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        } else{
+            break;
+        }
+    }
+
+    std::cout << "Quantidade cadastrada com sucesso" << std::endl;
+
+
+    std::cout << "Qual e o preco desse produto ?" << std::endl;
+    while(true){
+        std::cin >> temp.Preco_vend;
+
+        if(std::cin.fail() || std::cin.peek() != '\n' || temp.Preco_vend < 0){
+            std::cout << "Erro: Entrada Inválida! Por favor, digite novamente\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        } else{
+            break;
+        }
+    }
+
+    std::cout << "Preco do Produto cadastrado com sucesso! " << std::endl;
+
+
+    V_Produto.push_back(temp);
+
+
+    std::cout << "Produto Cadastrado com sucesso" << std::endl;
+
+
+    std::cout << "Assim ficou o cadastro do seu Produto" << std::endl;
+    std::cout << "Codigo: " << temp.codigo << std::endl;
+    std::cout << "Descricao: " << temp.Descricao << std::endl;
+    std::cout << "Quantidade em estoque: " << temp.Qtdade_estoque << std::endl;
+    std::cout << "Preco: R$" << temp.Preco_vend << std::endl;
+
+    LeValor(retornoMenu, opcao);
+
+}
+
+void ModificaProduto(std::vector<Produto> &V_Produto, int &opcao){
+    int indice;
+    int codigo;
+    std::string temp_descricao;
+    int temp_Quantidade;
+    float temp_preco;
+
+
+    std::cout << "Informe o codigo do Produto a ser modificado por favor !" << std::endl;
+    std::cout << "Digite aqui: ";
+    std::cin >> codigo;
+
+    if(ExisteCodigo(V_Produto, codigo, indice)){
+        int decisao;
+
+        while(true){
+
+            std::cout << "Codigo do Produto encontrado " << std::endl;
+            std::cout << "Qual informacao voce quer modificar ? " << std::endl;
+            std::cout << "1. Descricao" << std::endl;
+            std::cout << "2. Quantidade" << std::endl;
+            std::cout << "3. Preco" << std::endl;
+            LeValor("Digite aqui: ", decisao, 1, 3);
+
+            switch(decisao){
+                case 1:
+                std::cout << "Voce escolheu alterar Descricao !" << std::endl;
+
+
+
+
+                    break;
+
+
+
+
+
+                case 2:
+                    break;
+                case 3:
+                    break;
+
+
+
+            }
+        }
+    }
+
 }

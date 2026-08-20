@@ -1,5 +1,6 @@
 #include <iostream>
 #include "declara.h"
+#include <limits>
 
 using namespace std;
 
@@ -105,49 +106,23 @@ int main()
                 LeValor("digite aqui: ", cadastro, 1, 3);
 
                 switch(cadastro){
-                case 1:{
-                    //Cadastro Produto
-                    Produto temp;
+                case 1:
 
-                    std::cout << "Voce selecionou a opcao de cadastrar um Produto!" << std::endl;
-                    std::cout << "O programa ia gerar um codigo automaticamente para voce!" << std::endl;
-
-
-                    temp.codigo = rand() % 200;
-
-
-                    if(!V_Produto.empty()){
-                        while(true){
-                            if(ExisteCodigo(V_Produto, temp.codigo)){
-                                std::cout << "Codigo existente detectado" << std::endl;
-                                std::cout << "Vou gerar um novo codigo para o Cliente e passara por outra verificacao!" << std::endl;
-                                temp.codigo = rand() & 200;
-                            } else{
-                                break;
-                            }
-                        }
-                    }
-
-                    std::cout << "\nCodigo de cliente cadastrado com sucesso!" << std::endl;
-
-
-
-                    std::cout << "\nO codigo do cliente novo a ser cadastrado é " << temp.codigo << std::endl;
-                    std::cout << "Agora digite o endereco do cliente: " << std::endl;
-
-
-
-
-
-
-
+                    CadastroProduto(V_Produto, opcao);
 
                     break;
-                }
-
 
                 case 2:
                     //Modificacao Produto
+
+
+                    cout << "Voce selecionou a aba de modificacao!" << std::endl;
+
+                    if(!ExisteRegistro(V_Produto, opcao)){
+
+                        ModificaCliente(V_Cliente, opcao);
+
+                    }
                     break;
 
 

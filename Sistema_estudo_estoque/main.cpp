@@ -17,6 +17,15 @@ int main()
 
 
     Cliente teste;
+    Produto testeProduto;
+
+    testeProduto.Descricao = "asd";
+    testeProduto.Preco_vend = 1;
+    testeProduto.Qtdade_estoque = 1;
+    testeProduto.codigo = 1;
+
+    V_Produto.push_back(testeProduto);
+
 
 
     teste.codigo = 1;
@@ -120,7 +129,7 @@ int main()
 
                     if(!ExisteRegistro(V_Produto, opcao)){
 
-                        ModificaCliente(V_Cliente, opcao);
+                        ModificaProduto(V_Produto, opcao);
 
                     }
                     break;
@@ -140,6 +149,47 @@ int main()
 
         case 2:
             //Modulo de Movimentacoes do estoque
+            std::cout << "Bem vindo a tela de Movimentacoes!.." << std::endl;
+            std::cout << "Vamos gerar uma nota fiscal de saida!..." << std::endl;
+
+            if(V_Notas.size() == 5){
+                std::cout << "Infelizmente o sistema ja atingiu o seu limite de notas, por favor retorne mais tarde!.." << std::endl;
+                std::cout << "Exclua um Item e retorne para registrar mais!" << std::endl;
+                RetornarMenu(retornoMenu, opcao);
+            }
+
+            notas temp;
+
+            std::cout << "O programa ia gerar um codigo automaticamente para voce!" << std::endl;
+
+
+            temp.codigo = rand() % 200;
+
+
+            while(true){
+                if(ExisteCodigo(V_Notas, temp.codigo)){
+                    std::cout << "Codigo existente detectado" << std::endl;
+                    std::cout << "Vou gerar um novo codigo para o Cliente e passara por outra verificacao!" << std::endl;
+                    temp.codigo = rand() & 200;
+                } else{
+                    break;
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             break;
 
 

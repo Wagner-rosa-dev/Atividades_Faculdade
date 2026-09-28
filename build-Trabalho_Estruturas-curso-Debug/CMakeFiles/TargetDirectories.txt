@@ -1,0 +1,7 @@
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/Trabalho_Estruturas.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/edit_cache.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/rebuild_cache.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/list_install_components.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/install.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/install/local.dir
+/home/wagner/addgit/build-Trabalho_Estruturas-curso-Debug/CMakeFiles/install/strip.dir

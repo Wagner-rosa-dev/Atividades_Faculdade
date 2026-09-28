@@ -26,7 +26,7 @@ struct Produto{
 };
 
 struct notas{
-    int Numero_NF;
+    int codigo;
     int Cod_cliente;
     int Total_geral;
 
@@ -42,6 +42,8 @@ struct Itens_Notas{
 const std::string retornoMenu = "Digite zero para retornar ao menu";
 
 bool V_ClienteVazio(std::vector<Cliente> V_Cliente, int &opcao);
+
+
 
 template <typename T>
 bool ExisteCodigo(const std::vector<T> &V_Struct, int codigo){
@@ -63,16 +65,48 @@ bool ExisteCodigo(const std::vector<T> &V_Struct, int codigo, int &indice){
     return false;
 }
 
-
-
-
-
-
-
-
-void LeValor(std::string mensagem, int &valor);
+void RetornarMenu(std::string mensagem, int &valor);
 void LeValor(std::string mensagem, int &valor, int min, int max);
 void LeValor(std::string mensagem, std::string &endereco, int MAX_TAM);
+
+inline void LeValor(std::string mensagem, auto& temp){
+    while(true){
+        std::cout << mensagem << std::endl;
+        std::cin >> temp;
+        if(std::cin.fail() || std::cin.peek() != '\n' || temp < 0 ){
+            std::cout << "Erro: Entrada Invalida! " << std::endl;
+            std::cout << "Por favor digite novamente" << std::endl;
+        } else{
+            break;
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+void Modifica(std::string &CampoOriginal, std::string mensagem, int MAX, std::string NomeCampo, std::string NomeEstrutura, int codigo);
+
+inline void Modifica(auto& CampoOriginal, std::string mensagem, std::string NomeCampo, std::string NomeEstrutura, int codigo, int MAX = 0){
+    std::cout << "\nVoce selecionou para editar " << NomeCampo << "! " << std::endl;
+    std::cout << "Assim esta o " << NomeCampo << " do " << NomeEstrutura << " de Codigo: " << codigo << std::endl;
+    std::cout << NomeCampo << ": " << CampoOriginal;
+
+    std::cout << "\nDigite abaixo o novo valor" << std::endl;
+
+    LeValor(mensagem, CampoOriginal);
+
+    std::cout << "Modificacao feita com sucesso!" << std::endl;
+
+    std::cout << "Confira o resultado abaixo!." << std::endl;
+}
+
+
 void CadastraCliente(std::vector<Cliente> &V_Cliente, int &opcao);
 void ModificaCliente(std::vector<Cliente> &V_Cliente, int &opcao);
 void CadastroProduto(std::vector<Produto> &V_Produto, int &opcao);
@@ -91,25 +125,6 @@ bool ExisteRegistro(std::vector<T> V_Struct, int &opcao){
     return false;
 }
 
-template <typename tipoCampo>
-void Modifica(tipoCampo &CampoOriginal, std::string NomeCampo, std::string NomeEstrutura, int codigo){
-    std::string temp;
-
-    std::cout << "\nVoce selecionou para editar " << NomeCampo << "! " << std::endl;
-    std::cout << "Assim esta o " << NomeCampo << " do " << NomeEstrutura << " de Codigo: " << codigo << std::endl;
-    std::cout << NomeCampo << ": " << CampoOriginal;
-
-    std::cout << "\nDigite abaixo o novo valor" << std::endl;
-
-
-    LeValor("Digite aqui(Max: 50 letras): ", temp, 50);
-
-    CampoOriginal = temp;
-
-    std::cout << "Modificacao feita com sucesso!" << std::endl;
-
-    std::cout << "Confira o resultado abaixo!." << std::endl;
-}
 
 
 

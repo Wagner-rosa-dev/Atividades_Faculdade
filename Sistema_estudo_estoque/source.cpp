@@ -6,16 +6,13 @@ bool V_ClienteVazio(std::vector<Cliente> V_Cliente, int &opcao){
         std::cout << "ERRO " << std::endl;
         std::cout << "Infelizmente nao foi encontrado nenhum registro de Cliente para ser Modificado" << std::endl;
         std::cout << "Por favor volte mais tarde" << std::endl;
-        LeValor(retornoMenu, opcao);
+        RetornarMenu(retornoMenu, opcao);
         return true;
     }
     return false;
 }
 
-
-
-
-void LeValor(std::string mensagem, int &valor){
+void RetornarMenu(std::string mensagem, int &valor){
     while(true){
         std::cout << mensagem << std::endl;
         std::cin >> valor;
@@ -61,6 +58,25 @@ void LeValor(std::string mensagem, std::string &temp, int MAX_TAM){
 }
 
 
+void Modifica(std::string &CampoOriginal, std::string mensagem, int MAX, std::string NomeCampo, std::string NomeEstrutura, int codigo){
+    std::string temp;
+
+    std::cout << "\nVoce selecionou para editar " << NomeCampo << "! " << std::endl;
+    std::cout << "Assim esta o " << NomeCampo << " do " << NomeEstrutura << " de Codigo: " << codigo << std::endl;
+    std::cout << NomeCampo << ": " << CampoOriginal;
+
+    std::cout << "\nDigite abaixo o novo valor" << std::endl;
+
+
+    LeValor(mensagem, temp, MAX);
+
+    CampoOriginal = temp;
+
+    std::cout << "Modificacao feita com sucesso!" << std::endl;
+
+    std::cout << "Confira o resultado abaixo!." << std::endl;
+}
+
 
 void CadastraCliente(std::vector<Cliente> &V_Cliente, int &opcao){
     Cliente temp;
@@ -87,15 +103,13 @@ void CadastraCliente(std::vector<Cliente> &V_Cliente, int &opcao){
 
 
     std::cout << "\nO codigo do cliente novo a ser cadastrado é " << temp.codigo << std::endl;
-    std::cout << "Agora digite o endereco do cliente: " << std::endl;
+    std::cout << "Agora digite o endereco do cliente!!!! " << std::endl;
 
 
-    limpabuffer();
     LeValor("Digite aqui(rua,cidade): ", temp.Endereco, 50);
 
     std::cout << "Endereco registrado com sucesso!" << std::endl;
 
-    limpabuffer();
     LeValor("Digite aqui(DDDnumero): ", temp.Telefone, 11);
 
     std::cout << "Telefone registrado com sucesso" << std::endl;
@@ -107,12 +121,8 @@ void CadastraCliente(std::vector<Cliente> &V_Cliente, int &opcao){
     std::cout << "\n Telefone: " << temp.Telefone << std::endl;
 
     std::cout << "\n Em caso de algo fora do normal volte a esse menu e selecione a opcao de alteracao" << std::endl;
-    LeValor(retornoMenu, opcao);
+    RetornarMenu(retornoMenu, opcao);
 }
-
-
-
-
 
 
 
@@ -138,11 +148,10 @@ void ModificaCliente(std::vector<Cliente> &V_Cliente, int &opcao){
             LeValor("Digite aqui: ", decisao, 1, 2);
 
             if(decisao == 1){
-                int decisao = 0;
                 do{
 
 
-                    Modifica(V_Cliente[indice].Endereco, "Endereco", "Cliente", V_Cliente[indice].codigo);
+                    Modifica(V_Cliente[indice].Endereco, "Digite aqui(Max: 50 Letras): ", 50, "Endereco", "Cliente", V_Cliente[indice].codigo);
 
                     std::cout << "Codigo: " << V_Cliente[indice].codigo << std::endl;
                     std::cout << "Endereco: " << V_Cliente[indice].Endereco << "   <---- Item modificado " << std::endl;
@@ -165,23 +174,9 @@ void ModificaCliente(std::vector<Cliente> &V_Cliente, int &opcao){
 
 
             } else if(decisao == 2){
-                int decisao = 0;
                 do{
 
-                    std::cout << "\nVoce selecionou para editar o Telefone!" << std::endl;
-                    std::cout << "Assim esta o Telefone do Cliente de Codigo: " << V_Cliente[indice].codigo << std::endl;
-                    std::cout << "Endereco: " << V_Cliente[indice].Telefone;
-
-                    std::cout << "\nDigite abaixo o novo Telefone" << std::endl;
-                    limpabuffer();
-
-                    LeValor("Digite aqui(DDDnumero): ", temp_telefone, 11);
-
-                    V_Cliente[indice].Telefone = temp_telefone;
-
-                    std::cout << "Modificacao feita com sucesso!" << std::endl;
-
-                    std::cout << "Confira o resultado abaixo!." << std::endl;
+                    Modifica(V_Cliente[indice].Telefone, "Digite aqui (DDDnumero): ", 11, "Telefone","Cliente", codigo);
 
                     std::cout << "Codigo: " << V_Cliente[indice].codigo << std::endl;
                     std::cout << "Endereco: " << V_Cliente[indice].Endereco << std::endl;
@@ -202,20 +197,13 @@ void ModificaCliente(std::vector<Cliente> &V_Cliente, int &opcao){
                 opcao = 0;
                 break;
 
-            } else{
-                int temp;
-                std::cout << "Opcao errada digitada voltando a decisao" << std::endl;
-                std::cout << "Digite e confirme qualquer valor para voltar" << std::endl;
-                std::cin >> temp;
-                limpabuffer();
-                break;
             }
         }
 
     } else{
 
         std::cout << "O codigo do Cliente informado nao existe" << std::endl;
-        LeValor( retornoMenu, opcao);
+        RetornarMenu(retornoMenu, opcao);
     }
 }
 
@@ -296,7 +284,7 @@ void CadastroProduto(std::vector<Produto> &V_Produto, int &opcao){
     std::cout << "Quantidade em estoque: " << temp.Qtdade_estoque << std::endl;
     std::cout << "Preco: R$" << temp.Preco_vend << std::endl;
 
-    LeValor(retornoMenu, opcao);
+    RetornarMenu(retornoMenu, opcao);
 
 }
 
@@ -314,8 +302,9 @@ void ModificaProduto(std::vector<Produto> &V_Produto, int &opcao){
 
     if(ExisteCodigo(V_Produto, codigo, indice)){
         int decisao;
+        int escolha;
 
-        while(true){
+        do{
 
             std::cout << "Codigo do Produto encontrado " << std::endl;
             std::cout << "Qual informacao voce quer modificar ? " << std::endl;
@@ -326,26 +315,97 @@ void ModificaProduto(std::vector<Produto> &V_Produto, int &opcao){
 
             switch(decisao){
                 case 1:
-                std::cout << "Voce escolheu alterar Descricao !" << std::endl;
+                do{
 
 
+                    Modifica(V_Produto[indice].Descricao, "Digite aqui(Max: 50 Letras): ", 50, "Descricao", "Produto", codigo);
+
+                    std::cout << "Codigo: " << V_Produto[indice].codigo << std::endl;
+                    std::cout << "Descricao: " << V_Produto[indice].Descricao << "   <---- Item modificado " << std::endl;
+                    std::cout << "Quantidade em estoque: " << V_Produto[indice].Qtdade_estoque << std::endl;
+                    std::cout << "Preco de venda: " << V_Produto[indice].Preco_vend << std::endl;
 
 
-                    break;
+                    std::cout << "Volte ao menu se estiver tudo nos conformes ou edite de novo:" << std::endl;
+                    std::cout << "0. Voltar ao Menu" << std::endl;
+                    std::cout << "1. Modificar novamente" << std::endl;
 
 
+                    LeValor("Digite aqui: ", escolha, 0, 1);
 
+                } while(escolha == 1);
 
+                opcao = 0;
+                break;
 
                 case 2:
+                    do{
+
+                        Modifica(V_Produto[indice].Qtdade_estoque, "Digite aqui: ", "Quantidade em estoque", "Produto", codigo);
+
+                        std::cout << "Codigo: " << V_Produto[indice].codigo << std::endl;
+                        std::cout << "Descricao: " << V_Produto[indice].Descricao << std::endl;
+                        std::cout << "Quantidade em estoque: " << V_Produto[indice].Qtdade_estoque << "   <---- Item modificado " << std::endl;
+                        std::cout << "Preco de venda: " << V_Produto[indice].Preco_vend << std::endl;
+
+
+                        std::cout << "Volte ao menu se estiver tudo nos conformes ou edite de novo:" << std::endl;
+                        std::cout << "0. Voltar ao Menu" << std::endl;
+                        std::cout << "1. Modificar novamente" << std::endl;
+
+
+                        LeValor("Digite aqui: ", escolha, 0, 1);
+                    } while(escolha == 1);
+
+                    opcao = 0;
                     break;
+
                 case 3:
+                    do{
+                        Modifica(V_Produto[indice].Preco_vend, "Digite aqui: ","Preco de venda","Produto",codigo);
+
+                        std::cout << "Codigo: " << V_Produto[indice].codigo << std::endl;
+                        std::cout << "Descricao: " << V_Produto[indice].Descricao << std::endl;
+                        std::cout << "Quantidade em estoque: " << V_Produto[indice].Qtdade_estoque << std::endl;
+                        std::cout << "Preco de venda: " << V_Produto[indice].Preco_vend << "   <---- Item modificado " << std::endl;
+
+
+                        std::cout << "Volte ao menu se estiver tudo nos conformes ou edite de novo:" << std::endl;
+                        std::cout << "0. Voltar ao Menu" << std::endl;
+                        std::cout << "1. Modificar novamente" << std::endl;
+
+
+                        LeValor("Digite aqui: ", escolha, 0, 1);
+
+                    } while(escolha == 1);
+
+                    opcao = 0;
                     break;
-
-
 
             }
-        }
+        } while(opcao != 0);
+
+
+
+
+    } else {
+        std::cout << "O codigo do Cliente informado nao existe" << std::endl;
+        RetornarMenu(retornoMenu, opcao);
+
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

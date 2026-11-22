@@ -1,0 +1,15 @@
+Simbolo Bits Codigo
+'r' 3 000
+'s' 3 001
+' ' 2 01
+'a' 3 100
+'c' 4 1010
+'f' 4 1011
+'i' 4 1100
+'l' 4 1101
+'n' 4 1110
+'o' 4 1111
+Mensagem: " sinal  fraco "
+Numero de bits = 44
+Numero de caracteres = 14
+Taxa de compressao = 39.29%

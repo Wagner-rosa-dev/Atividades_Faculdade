@@ -1,0 +1,36 @@
+Simbolo Bits Codigo
+'u' 5 00000
+'h' 6 000010
+'v' 7 0000110
+'1' 7 0000111
+'s' 4 0001
+'t' 4 0010
+'.' 5 00110
+'l' 5 00111
+'a' 3 010
+'n' 5 01100
+'b' 6 011010
+'2' 7 0110110
+':' 7 0110111
+'g' 7 0111000
+'x' 7 0111001
+'-' 8 01110100
+'3' 8 01110101
+'4' 8 01110110
+'6' 8 01110111
+'c' 5 01111
+'o' 3 100
+'i' 5 10100
+'m' 5 10101
+'d' 5 10110
+'p' 6 101110
+'7' 8 10111100
+'8' 8 10111101
+'f' 7 1011111
+'e' 4 1100
+'r' 4 1101
+' ' 3 111
+Mensagem: "relatorio da sonda: pouso concluido na borda da cratera norte. temperatura do solo: -142 graus. bateria em 87 por cento. foram coletadas 3 amostras de rocha escura e 1 amostra de gelo. o braco robotico apresentou falha leve no eixo 2. proxima transmissao em 6 horas. fim do relatorio."
+Numero de bits = 1179
+Numero de caracteres = 284
+Taxa de compressao = 51.89%

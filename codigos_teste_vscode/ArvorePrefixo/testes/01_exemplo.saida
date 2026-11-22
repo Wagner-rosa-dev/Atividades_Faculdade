@@ -1,0 +1,11 @@
+Simbolo Bits Codigo
+'a' 1 0
+'r' 2 10
+'c' 4 1100
+'t' 4 1101
+' ' 4 1110
+'e' 4 1111
+Mensagem: "cratera rara"
+Numero de bits = 28
+Numero de caracteres = 12
+Taxa de compressao = 29.17%

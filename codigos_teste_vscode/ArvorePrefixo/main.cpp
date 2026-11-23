@@ -1,10 +1,11 @@
-// Integrantes do Grupo:
-// Nome Completo - RA / Numero Institucional
-//
-// Modo de uso:
-// Compile todos os arquivos fonte juntos (ex: g++ main.cpp ArvorePrefixo.cpp -o decodificador)
-// e execute o programa. No menu principal, digite 1 para informar o caminho de um arquivo .pre
-// (ex: testes/01_exemplo.pre) e decodifica-lo, ou 2 para encerrar o programa.
+/* Integrantes do Grupo:
+Lucas Rizati Baebe - 2360930
+Pablo Henrique Pereira dos Santos - 2376541
+Pedro de Almeida Lourenço - 2360141
+Wagner Rosa Santos Junior - 2348032
+
+*/
+
 
 #include "ArvorePrefixo.h"
 #include <iostream>

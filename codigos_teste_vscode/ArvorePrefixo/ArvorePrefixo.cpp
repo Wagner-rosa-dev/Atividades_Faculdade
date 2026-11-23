@@ -1,5 +1,10 @@
-// Integrantes do Grupo:
-// Nome Completo - RA / Numero Institucional
+/* Integrantes do Grupo:
+Lucas Rizati Baebe - 2360930
+Pablo Henrique Pereira dos Santos - 2376541
+Pedro de Almeida Lourenço - 2360141
+Wagner Rosa Santos Junior - 2348032
+
+*/
 
 #include "ArvorePrefixo.h"
 #include <iostream>
